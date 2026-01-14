@@ -6,9 +6,36 @@ header {
   margin-bottom: 1em;
 }
 
-h2 {
+h2, h3, h4, .purple {
   color: rebeccapurple;
 }
+
+p.success.alert { }
+
+header p {
+  font-family: 'Papyrus';
+} 
+
+.about-section img {
+  border-radius: 50%;
+}
+
+img:hover {
+  max-height: 300px;
+}
+
+li a:hover {
+  /* font-size: 2em; */
+  text-decoration: none;
+}
+
+/* h3 {
+  color: rebeccapurple;
+}
+
+h4 {
+  color: rebeccapurple;
+} */
 
 p {
   font-size: 18px;
