@@ -41,8 +41,30 @@ nav a {
 
 
 /* topics cards */
+.card-deck {
+  display: flex;
+  flex-wrap: wrap;
+}
+
 .topics-section .card {
   border: 1px solid black;
+}
+
+.card {
+  flex-grow: 1;
+  
+  display: flex;
+  height: 300px;
+
+}
+
+.card {
+  flex-direction: column;
+
+}
+
+.card img {
+  flex-grow: 1;
 }
 
 .topics-section img {
