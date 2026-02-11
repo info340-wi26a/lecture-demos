@@ -1,8 +1,16 @@
 import React from 'react';
 
+import { HeaderBar } from './Header.jsx';
+import { ChatPane } from './ChatPane.jsx';
+
 function App(props) {
   return (
-    <h1>Hello React Chat</h1>
+    <div>
+      <HeaderBar />
+      <div className="p-2">
+        <ChatPane />
+      </div>
+    </div>
   );
 }
 
