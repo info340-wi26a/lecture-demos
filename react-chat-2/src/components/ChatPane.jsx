@@ -9,17 +9,24 @@ export function ChatPane(props) {
   console.log("rendering chatpane")
   const { currentChannel } = props;
 
+  //STATE MANAGAMENT
+  const [messageObjArray, setMessageObjArray] = useState(INITIAL_CHAT_LOG); //if nothing in state, get "hello"
+  // console.log(stateResult);
+  // const messageObjArray = stateResult[0]; //state variable
+  // const setMessageObjArray = stateResult[1]; //state setter func
+
+
   //data: an array of message objects [{}, {}]
-  const messageObjArray = INITIAL_CHAT_LOG
+  // const messageObjArray = INITIAL_CHAT_LOG
 
-  //event management
   const handleClick = (event) => {
-    const userObj = USERS[1]; //default to Parrot
-    const messageText = "Button-posted message"
-    const channel = "general"
-
-    addMessage(handleClick)   
+     console.log("You clicked me!");
+     const user = USERS[1];
+     const message = "Hello interactivity!";
+     const channel = "random";
+     addMessage(user, message, channel);
   }
+
 
   // DATA MANAGEMENT: how do we change
   const addMessage = (userObj, messageText, channel) => {
@@ -32,7 +39,9 @@ export function ChatPane(props) {
       "channel": channel
     }
     console.log(newMessage);
-    messageObjArray.push(newMessage)
+    const updatedMsgArray = [...messageObjArray, newMessage]
+    setMessageObjArray(updatedMsgArray) //1. writes on the board
+                                        //2. rerenders the compon
   }
 
   /* RENDERING: what do we look like */
@@ -58,7 +67,10 @@ export function ChatPane(props) {
       <div className="scrollable-pane pt-2 my-2">
         {/* button demo */}
         <div className="mb-2">
-          <button className="btn btn-success">Add a message!</button>
+          {/* addEventListener('click', function() {} */}
+          <button className="btn btn-success"
+            onClick={handleClick}
+          >Add a message!</button>
         </div>
         <hr/>
 
@@ -71,7 +83,7 @@ export function ChatPane(props) {
         {messageItemArray}
       </div>
 
-      <ComposeForm currentChannel={currentChannel} />
+      <ComposeForm currentUser={USERS[1]} currentChannel={currentChannel} addMessageFunction={addMessage} />
       </>
   )
 }
