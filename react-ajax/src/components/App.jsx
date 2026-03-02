@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 //example GitHub repo data
 const EXAMPLE_DATA = [
@@ -11,18 +11,71 @@ const EXAMPLE_DATA = [
 function App(props) {
   const [stateData, setStateData] = useState(EXAMPLE_DATA);
   //control form
-  const [queryInput, setQueryInput] = useState('');
+  console.log("current state data", stateData);
+
+  const [queryInput, setQueryInput] = useState('react');
+
+  //first rendering, download some data
+
+  useEffect(() => {
+    const url = "https://api.github.com/search/repositories?q="+queryInput;
+    console.log("effect hook go!");
+    fetch(url)
+      .then((response) => {
+        return response.json()
+      })
+      .then((data) => {
+        console.log(data);
+        setStateData(data.items);
+      })
+      .catch((error) => {
+        console.log("You goofed!");
+        console.log(error.message);
+      })
+
+  }, [])
+
+
+
+
+
+
+
 
   const handleChange = (event) => {
     setQueryInput(event.target.value);
   }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     console.log("submitting form");
 
     //do something with form input!
+    const url = "https://api.github.com/search/repositories?q="+queryInput;
 
+    try {
+      const response = await fetch(url)
+      const data = await response.json() 
+      console.log(data);
+      setStateData(data.items);
+    } catch(error) {
+      console.log("You goofed!");
+      console.log(error.message);
+    }
+
+    // fetch(url)
+    //   .then((response) => {
+    //     return response.json()
+    //   })
+    //   .then((data) => {
+    //     console.log(data);
+    //   })
+    //   .catch((error) => {
+    //     console.log("You goofed!");
+    //     console.log(error.message);
+    //   })
+
+    console.log("send request");
   }
 
 
@@ -37,7 +90,7 @@ function App(props) {
     <div className="container">
       <header><h1>AJAX Demo</h1></header> 
 
-      <form method="GET" action="https://api.github.com/search/repositories">
+      <form method="GET" action="https://api.github.com/search/repositories" onSubmit={handleSubmit}>
         <input type="text" className="form-control mb-2" 
           name="q"
           placeholder="Search Github for..."
