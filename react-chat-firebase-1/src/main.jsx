@@ -9,6 +9,26 @@ import App from './components/App.jsx';
 import 'bootstrap/dist/css/bootstrap.css';
 import './index.css';
 
+
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyAdm7N5l-SkRGhgloAiQT4WcwgmeZRb6Kc",
+  authDomain: "react-chat-wi26a-f6aab.firebaseapp.com",
+  databaseURL: "https://react-chat-wi26a-f6aab-default-rtdb.firebaseio.com",
+  projectId: "react-chat-wi26a-f6aab",
+  storageBucket: "react-chat-wi26a-f6aab.firebasestorage.app",
+  messagingSenderId: "925719322604",
+  appId: "1:925719322604:web:fbd9a14afd7b3ad926eac9"
+};
+
+// Initialize Firebase
+initializeApp(firebaseConfig);
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <BrowserRouter>

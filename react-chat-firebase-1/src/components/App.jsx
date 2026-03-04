@@ -4,6 +4,8 @@ import { Routes, Route, Outlet, Navigate, useNavigate } from 'react-router';
 
 import { HeaderBar } from './HeaderBar.jsx';
 
+import { getDatabase, ref, set as firebaseSet, push as firebasePush, onValue } from 'firebase/database';
+
 import ChatPage from './ChatPage.jsx';
 import SignInPage from './SignInPage.jsx';
 import * as Static from './StaticPages.jsx';
@@ -12,10 +14,32 @@ import INITIAL_CHAT_LOG from '../data/chat_log.json'
 import DEFAULT_USERS from '../data/users.json';
 
 function App(props) {
-  const [messageStateArray, setMessageStateArray] = useState(INITIAL_CHAT_LOG);
+  const [messageStateArray, setMessageStateArray] = useState([]);
   const [currentUser, setCurrentUser] = useState(DEFAULT_USERS[0]) //initialize;
 
   const navigateTo = useNavigate(); //navigation hook
+
+  useEffect(() => {
+    console.log("subscribing");
+    //subscribe to firebase
+    const db = getDatabase();
+    const allMessagesRef = ref(db, "allMessages")
+    onValue(allMessagesRef, (snapshot) => {
+      const allMessagesObj = snapshot.val();
+ 
+      //have ["","",""]
+      const objKeys = Object.keys(allMessagesObj);
+      
+      //want [{},{},{}]
+      const newMessageArray = objKeys.map((keyString) => {
+        const msgObj = allMessagesObj[keyString];
+        return msgObj;
+      })
+      setMessageStateArray(newMessageArray);
+
+    })
+
+  }, []);
 
   //effect to run when the component first loads!
   useEffect(() => {
@@ -41,8 +65,18 @@ function App(props) {
       "timestamp": Date.now(),
       "channel": channel
     }
-    const newMessageArray = [...messageStateArray, newMessageObj];
-    setMessageStateArray(newMessageArray); //update state & rerender
+    //DON'T PUT IN STATE
+    // const newMessageArray = [...messageStateArray, newMessageObj];
+    // setMessageStateArray(newMessageArray); //update state & rerender
+
+    //PUT IN DATABASE
+    const db = getDatabase();
+    const allMessagesRef = ref(db, "allMessages")
+    firebasePush(allMessagesRef, newMessageObj);
+
+    //EXAMPLE
+    // const userMsgRef = ref(db, "userData/"+userId+"all-messages")
+
   }
 
   return (
