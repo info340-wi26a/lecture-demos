@@ -3,6 +3,8 @@ import React, {useEffect, useState} from 'react';
 import { Routes, Route, Outlet, Navigate, useNavigate } from 'react-router';
 import { getDatabase, ref, push as firebasePush, onValue } from 'firebase/database'
 
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+
 import { HeaderBar } from './HeaderBar.jsx';
 import ChatPage from './ChatPage.jsx';
 import SignInPage from './SignInPage.jsx';
@@ -22,6 +24,25 @@ function App(props) {
   useEffect(() => {
     //log in a default user
     //changeUser(DEFAULT_USERS[1])
+
+    const auth = getAuth();
+    onAuthStateChanged(auth, (firebaseUser) => {
+      console.log(firebaseUser);
+      if(firebaseUser) { //exists, so signed in
+        const userObj = {...firebaseUser, 
+          userId: firebaseUser.uid,
+          userName: firebaseUser.displayName,
+          userImg: firebaseUser.photoURL || "/img/null.png"
+
+        }
+        setCurrentUser(userObj);
+      } else { //signed out
+        setCurrentUser(DEFAULT_USERS[0]);
+      }
+
+    })
+
+
   }, []) //array is list of variables that will cause this to rerun if changed
 
   //effect to run when the component first loads

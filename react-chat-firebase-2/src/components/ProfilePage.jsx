@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
 
+import { getApp } from 'firebase/app';
+import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { updateProfile } from 'firebase/auth';
+
 export default function ProfilePage(props) {
   const { currentUser } = props;
   //convenience
@@ -13,12 +17,26 @@ export default function ProfilePage(props) {
     if(event.target.files.length > 0 && event.target.files[0]) {
       const imageFile = event.target.files[0]
       setImageFile(imageFile);
+      console.log(URL.createObjectURL(imageFile));
       setImageUrl(URL.createObjectURL(imageFile));
     }
   }
 
-  const handleImageUpload = (event) => {
+  const handleImageUpload = async (event) => {
     console.log("Uploading", imageFile);
+
+    const storage = getStorage(getApp(), "gs://info340-media.firebasestorage.app");
+
+    const imageRef = storageRef(storage, "lecture-demo/userImg/"+currentUser.userId+".png");
+
+    await uploadBytes(imageRef, imageFile);
+    const url = await getDownloadURL(imageRef)
+    console.log(url);
+
+    //updates the user list
+    //updateProfile(currentUser, {photoURL: url});
+    //alternatively: push something to the RTDB, 
+
   }
 
   return (
